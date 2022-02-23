@@ -127,46 +127,44 @@ def game_hash
   }
 end
 
-def all_players 
-  game_hash[:home][:players] + game_hash[:away][:players]
-end
-def all_teams
-  game_hash[:home] + game_hash[:away]
-end
-
-def player_stats(player_name)
-  all_players.find do |player| 
-    player[:player_name] == player_name 
-  end
-end
-
-def num_points_scored(player_name)
-  player = player_stats(player_name)
-  player[:points]
+def find_player name 
+  # iterate over outer tier
+  game_hash.values.each {|team|
+     team[:players].each {|p|
+      if p[:player_name] == name
+        return p
+      end
+    }
+  }
+  nil
 end
 
-def shoe_size(player_name)
-  player = player_stats(player_name)
-  player[:shoe]
-end
-def team_names
-  game_hash.map do |location, team_data|
-    team_data[:team_name]
-  end
-end
 
-  def team_colors
-    game_hash.each do |k, v|
-      "k: #{key}"
-      "v:#{v}"
-      
-      binding.pry
+def num_points_scored name
+  player =find_player(name)
+    if player
+      return player[:points]
     end
 end
 
- def player_numbers(team_name)
-  team = game_hash.each do |number, value|
-    player[:number]
+def shoe_size name
+  player =find_player(name)
+  if player
+    return player[:shoe]
   end
 end
 
+def team_colors name_of_team
+
+  game_hash.values.each{|team|
+   if team[:team_name] == name_of_team
+    return team[:colors]
+   end
+  }
+end
+def team_names
+  game_hash.values.each{|team|
+  if team[:team_name] == name_of_team
+    name_of_team
+  end
+end
